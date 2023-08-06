@@ -6,6 +6,10 @@
 
 #include <iostream>
 
+#define PORT 12345
+#define TWO_SYMBOLS 99
+#define MULTIPLE_OF_32 32
+
 class Server {
  public:
   int GetData();
