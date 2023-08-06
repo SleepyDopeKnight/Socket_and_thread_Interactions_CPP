@@ -14,6 +14,9 @@
 #include <string>
 #include <thread>
 
+#define PORT 12345
+#define MAX_STRING_LENGHT 64
+
 class Client {
  public:
   void StartProcessing();

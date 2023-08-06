@@ -59,7 +59,7 @@ void Client::Output() {
 
 int Client::ValidationString(std::string input_line) {
   if (input_line.find_first_not_of("0123456789") != input_line.npos ||
-      input_line.length() > 64) {
+      input_line.length() > MAX_STRING_LENGHT) {
     {
       std::lock_guard<std::mutex> output_lock(output_mutex_);
       output_.push(
@@ -86,7 +86,9 @@ void Client::SortingAndReplacingElements(std::string &input_line) {
 
 void Client::SendData(int &summary_of_numbers) {
   int data_socket = CreatingSocket();
-
+  if (data_socket < 0) {
+    return;
+  }
   struct sockaddr_in server_address;
   FillingServer(server_address);
   if (connect(data_socket, (struct sockaddr *)&server_address,
@@ -117,7 +119,7 @@ int Client::CreatingSocket() {
 void Client::FillingServer(sockaddr_in &server_address) {
   std::memset(&server_address, 0, sizeof(server_address));
   server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(12345);
+  server_address.sin_port = htons(PORT);
   inet_pton(AF_INET, "127.0.0.1", &server_address.sin_addr);
 }
 
