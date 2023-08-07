@@ -1,47 +1,49 @@
-.PHONY: all clean check rebuild
-CXX = g++ -std=c++17
-CXXFLAGS = -Wall -Werror -Wextra -g
+.PHONY: all clean code_check memory_check rebuild
+CXX ?= g++
+CXXFLAGS ?= -std=c++17 -Wall -Werror -Wextra -g
 OS = $(shell uname -s)
-TEST_FLAGS = -o client_test -lgtest
-SOURCE = shared_data.cc
+TEST_FLAGS ?= -o client_test.out -lgtest
+SOURCE = client
 
 ifeq ($(OS), Linux)
 	TEST_FLAGS += -lpthread
 endif
 
-all: client tests gcov_report check
+all: $(SOURCE).a $(SOURCE).out $(SOURCE)_test.out report memory_check code_check
 
-client: $(SOURCE) main.cc
-	$(CXX) $(CXXFLAGS) main.cc $(SOURCE) -o client
+$(SOURCE).a: $(SOURCE).cc
+	$(CXX) $(CXXFLAGS) $(SOURCE).cc -c
+	ar rcs $(SOURCE).a $(SOURCE).o
+	ranlib $(SOURCE).a
 
-client_debug: $(SOURCE)
-	$(CXX) $(CXXFLAGS) -fsanitize=thread main.cc $(SOURCE) -o client_debug
+$(SOURCE).out: $(SOURCE).a main.cc
+	$(CXX) $(CXXFLAGS) main.cc $(SOURCE).a -o $(SOURCE).out
 
-tests: tests.cc
-	$(CXX) $(CXXFLAGS) -fsanitize=thread tests.cc $(SOURCE) $(TEST_FLAGS)
-	./client_test
+$(SOURCE)_debug.out: $(SOURCE).a main.cc
+	$(CXX) $(CXXFLAGS) -fsanitize=thread main.cc $(SOURCE).a -o $(SOURCE)_debug.out
 
-gcov_report: tests.cc
-	$(CXX) $(CXXFLAGS) -fprofile-arcs -ftest-coverage tests.cc $(SOURCE) $(TEST_FLAGS)
-	./client_test
+$(SOURCE)_test.out: tests.cc
+	$(CXX) $(CXXFLAGS) -fsanitize=thread tests.cc $(SOURCE).a $(TEST_FLAGS)
+	./$(SOURCE)_test.out
+
+report: tests.cc
+	$(CXX) $(CXXFLAGS) -fprofile-arcs -ftest-coverage tests.cc $(SOURCE).a $(TEST_FLAGS)
+	./$(SOURCE)_test.out
 	lcov -t "test" -o test.info --no-external -c -d . --ignore-errors inconsistent
 	genhtml -o report test.info --ignore-errors inconsistent
-ifeq ($(OS), Darwin)
-	open ./report/index.html
-else
-	xdg-open ./report/index.html
-endif
 
 clean:
-	rm -rf *.out *.gcda *.gcno *.info report *.dSYM .DS_Store client*
+	rm -rf *.out *.gcda *.gcno *.info report *.dSYM .DS_Store *.a *.o
 
-check:
+code_check:
 	clang-format -style=google -i *.cc *.h
 	cppcheck *.cc
+
+memory_check:
 ifeq ($(OS), Darwin)
-	CK_FORK=no leaks --atExit -- ./client_test
+	CK_FORK=no leaks --atExit -- ./$(SOURCE)_test.out
 else
-	valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all ./client_test
+	valgrind --trace-children=yes --track-fds=yes --track-origins=yes --leak-check=full --show-leak-kinds=all ./$(SOURCE)_test.out
 endif
 
 rebuild: clean all

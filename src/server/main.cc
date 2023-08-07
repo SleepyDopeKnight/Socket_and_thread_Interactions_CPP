@@ -1,7 +1,7 @@
-#include "analysator_data.h"
+#include "server.h"
 
 int main() {
   Server server;
-  server.GetData();
+  server.StartServer();
   return 0;
 }

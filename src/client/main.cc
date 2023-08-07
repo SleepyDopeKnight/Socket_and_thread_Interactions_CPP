@@ -1,4 +1,4 @@
-#include "shared_data.h"
+#include "client.h"
 
 int main() {
   Client client;
