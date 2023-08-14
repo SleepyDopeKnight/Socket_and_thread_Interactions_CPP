@@ -27,7 +27,7 @@ $(SOURCE)_test.out: $(SOURCE).a tests.cc
 	./$(SOURCE)_test.out
 
 report: $(SOURCE).a tests.cc
-	$(CXX) $(CXXFLAGS) -fprofile-arcs -ftest-coverage tests.cc $(SOURCE).a $(TEST_FLAGS)
+	$(CXX) $(CXXFLAGS) -fprofile-arcs -ftest-coverage tests.cc $(SOURCE).cc $(TEST_FLAGS)
 	./$(SOURCE)_test.out
 	lcov -t "test" -o test.info --no-external -c -d . $(GCOV)
 	genhtml -o report test.info $(GCOV)
