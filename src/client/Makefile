@@ -22,11 +22,11 @@ $(SOURCE).out: $(SOURCE).a main.cc
 $(SOURCE)_debug.out: $(SOURCE).a main.cc
 	$(CXX) $(CXXFLAGS) -fsanitize=thread main.cc $(SOURCE).a -o $(SOURCE)_debug.out
 
-$(SOURCE)_test.out: tests.cc
+$(SOURCE)_test.out: $(SOURCE).a tests.cc
 	$(CXX) $(CXXFLAGS) -fsanitize=thread tests.cc $(SOURCE).a $(TEST_FLAGS)
 	./$(SOURCE)_test.out
 
-report: tests.cc
+report: $(SOURCE).a tests.cc
 	$(CXX) $(CXXFLAGS) -fprofile-arcs -ftest-coverage tests.cc $(SOURCE).a $(TEST_FLAGS)
 	./$(SOURCE)_test.out
 	lcov -t "test" -o test.info --no-external -c -d . --ignore-errors inconsistent
