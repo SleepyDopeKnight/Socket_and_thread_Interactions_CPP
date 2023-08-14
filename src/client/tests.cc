@@ -7,11 +7,11 @@ TEST(ClientTest, InputTestCorrectInput) {
   std::stringstream test_input("12323123");
   std::thread client_thread([&]() { client.Input(std::ref(test_input)); });
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
-  std::string value = client.GetBufferValue();
-  EXPECT_TRUE(value == "333KBKBKB11");
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
+  std::string value = client.GetBufferValue();
+  EXPECT_TRUE(value == "333KBKBKB11");
 }
 
 TEST(ClientTest, InputTestIncorrectInput) {
@@ -19,11 +19,11 @@ TEST(ClientTest, InputTestIncorrectInput) {
   std::stringstream test_input("safsad");
   std::thread client_thread([&]() { client.Input(std::ref(test_input)); });
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
-  std::string value = client.GetBufferValue();
-  EXPECT_TRUE(value == "");
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
+  std::string value = client.GetBufferValue();
+  EXPECT_TRUE(value == "");
 }
 
 TEST(ClientTest, InputTestIncorrectLenghtInput) {
@@ -32,11 +32,11 @@ TEST(ClientTest, InputTestIncorrectLenghtInput) {
       "0123456789012345678901234567890123456789012345678901234567890123456789");
   std::thread client_thread([&]() { client.Input(std::ref(test_input)); });
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
-  std::string value = client.GetBufferValue();
-  EXPECT_TRUE(value == "");
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
+  std::string value = client.GetBufferValue();
+  EXPECT_TRUE(value == "");
 }
 
 TEST(ClientTest, InputTestEmptyInput) {
@@ -44,11 +44,11 @@ TEST(ClientTest, InputTestEmptyInput) {
   std::stringstream test_input("");
   std::thread client_thread([&]() { client.Input(std::ref(test_input)); });
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
-  std::string value = client.GetBufferValue();
-  EXPECT_TRUE(value == "");
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
+  std::string value = client.GetBufferValue();
+  EXPECT_TRUE(value == "");
 }
 
 TEST(ClientTest, HandlingTestCorrectInput) {
@@ -56,7 +56,7 @@ TEST(ClientTest, HandlingTestCorrectInput) {
   client.SetBufferValue("3KBKB1");
   std::thread client_thread(&Client::Handling, &client);
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
   int summary = client.GetSummaryOfNumbers();
@@ -68,7 +68,7 @@ TEST(ClientTest, HandlingTestIncorrectInput) {
   client.SetBufferValue("asdsadasd");
   std::thread client_thread(&Client::Handling, &client);
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
   int summary = client.GetSummaryOfNumbers();
@@ -80,7 +80,7 @@ TEST(ClientTest, HandlingTestEmptyInput) {
   client.SetBufferValue("");
   std::thread client_thread(&Client::Handling, &client);
 
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client.StopProcessing();
   client_thread.join();
   int summary = client.GetSummaryOfNumbers();
@@ -92,7 +92,7 @@ TEST(ClientTest, StartStop) {
   client.SetBufferValue("");
   std::thread client_thread(&Client::StartProcessing, &client);
   client.StopProcessing();
-  std::this_thread::sleep_for(std::chrono::microseconds(500));
+  std::this_thread::sleep_for(std::chrono::microseconds(700));
   client_thread.join();
   int summary = client.GetSummaryOfNumbers();
   EXPECT_EQ(summary, 0);

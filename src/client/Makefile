@@ -4,9 +4,12 @@ CXXFLAGS ?= -std=c++17 -Wall -Werror -Wextra -g
 OS = $(shell uname -s)
 TEST_FLAGS ?= -o client_test.out -lgtest
 SOURCE = client
+GCOV = 
 
 ifeq ($(OS), Linux)
 	TEST_FLAGS += -lpthread
+else
+	GCOV = --ignore-errors inconsistent
 endif
 
 all: $(SOURCE).a $(SOURCE).out $(SOURCE)_test.out report memory_check code_check
@@ -29,8 +32,8 @@ $(SOURCE)_test.out: $(SOURCE).a tests.cc
 report: $(SOURCE).a tests.cc
 	$(CXX) $(CXXFLAGS) -fprofile-arcs -ftest-coverage tests.cc $(SOURCE).a $(TEST_FLAGS)
 	./$(SOURCE)_test.out
-	lcov -t "test" -o test.info --no-external -c -d . --ignore-errors inconsistent
-	genhtml -o report test.info --ignore-errors inconsistent
+	lcov -t "test" -o test.info --no-external -c -d . $(GCOV)
+	genhtml -o report test.info $(GCOV)
 
 clean:
 	rm -rf *.out *.gcda *.gcno *.info report *.dSYM .DS_Store *.a *.o
