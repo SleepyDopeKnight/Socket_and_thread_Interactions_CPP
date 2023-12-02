@@ -7,9 +7,9 @@
 #include <cstring>
 #include <iostream>
 
-constexpr int PORT = 12345;
-constexpr int TWO_SYMBOLS = 99;
-constexpr int MULTIPLE_OF_32 = 32;
+constexpr int kPort = 12345;
+constexpr int kTwoSymbols = 99;
+constexpr int kMultipleOf_32 = 32;
 
 class Server {
  public:

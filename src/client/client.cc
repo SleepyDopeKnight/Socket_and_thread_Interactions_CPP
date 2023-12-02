@@ -72,7 +72,7 @@ bool Client::ValidationString(std::string input_line) {
   if (input_line.find_first_not_of("0123456789") != input_line.npos) {
     return false;
   }
-  if (input_line.length() > MAX_STRING_LENGHT) {
+  if (input_line.length() > kMaxStringLength) {
     return false;
   }
   return true;
@@ -125,7 +125,7 @@ int Client::CreateSocket() {
 void Client::FillServer(sockaddr_in &server_address) {
   std::memset(&server_address, 0, sizeof(server_address));
   server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(PORT);
+  server_address.sin_port = htons(kPort);
   inet_pton(AF_INET, "127.0.0.1", &server_address.sin_addr);
 }
 

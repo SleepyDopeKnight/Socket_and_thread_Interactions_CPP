@@ -40,7 +40,7 @@ int Server::CreateSocket() {
 void Server::FillServer(sockaddr_in &server_address) {
   std::memset(&server_address, 0, sizeof(server_address));
   server_address.sin_family = AF_INET;
-  server_address.sin_port = htons(PORT);
+  server_address.sin_port = htons(kPort);
   server_address.sin_addr.s_addr = INADDR_ANY;
 }
 
@@ -60,8 +60,8 @@ void Server::BindAndListenSocket(sockaddr_in &server_address,
 }
 
 bool Server::CheckNumber() {
-  return summary_of_numbers_ > TWO_SYMBOLS &&
-         summary_of_numbers_ % MULTIPLE_OF_32 == 0;
+  return summary_of_numbers_ > kTwoSymbols &&
+         summary_of_numbers_ % kMultipleOf_32 == 0;
 }
 
 void Server::ReceiveData(sockaddr_in &client_address) {

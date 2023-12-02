@@ -15,8 +15,8 @@
 #include <string>
 #include <thread>
 
-constexpr int PORT = 12345;
-constexpr int MAX_STRING_LENGHT = 64;
+constexpr int kPort = 12345;
+constexpr int kMaxStringLength = 64;
 
 class Client {
  public:
